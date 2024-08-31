@@ -1,8 +1,11 @@
 import 'dart:async';
 
-import 'package:ai_chatboat/view/homepage.dart';
+
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+import '../view/homepage.dart';
 
 class SplashController extends GetxController {
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();

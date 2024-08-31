@@ -1,7 +1,7 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:ai_chatboat/controller/home_controller.dart';
-import 'package:ai_chatboat/view/settings.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:share_plus/share_plus.dart';
+import 'package:ai_chatboat/model/util.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 import '../model/export_libreary.dart';
@@ -123,10 +123,53 @@ class Homepage extends StatelessWidget {
                         controller.trData = data;
                         if (data.isEmpty) {
                           return Center(
-                              child: Text(
-                            "${user?.email}",
-                            style: const TextStyle(color: Colors.white),
-                          ));
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Image.asset(
+                                  "assets/f1.png",
+                                  height: 170,
+                                  width: 170,
+                                ),
+                                Expanded(
+                                  child: GridView.builder(
+                                    itemCount: DataClass().queList.length,
+                                    gridDelegate:
+                                        SliverGridDelegateWithFixedCrossAxisCount(
+                                            crossAxisCount: 2),
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                     Map<String,dynamic> list= DataClass().queList[index];
+                                      return InkWell(
+                                        onTap: () {
+                                          controller.chatController.text=list["text"];
+                                        },
+                                        child: Container(
+                                          height: 150,
+                                          width: 150,margin: EdgeInsets.all(10),
+                                          decoration:
+                                              BoxDecoration(color: Color(0xff1E1F20),borderRadius: BorderRadius.circular(10)),
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              Icon(list["icon"],color: list["color"],),
+                                              SizedBox(
+                                                height: 10,
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.all(8.0),
+                                                child: Text(list["label"],style: TextStyle(color: Colors.white),),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
                         } else {
                           return ScrollablePositionedList.builder(
                             itemScrollController:
@@ -148,17 +191,15 @@ class Homepage extends StatelessWidget {
                                     ? Alignment.bottomRight
                                     : Alignment.bottomLeft,
                                 child: Container(
-                                  width: chat["user"] == 0
-                                      ? MediaQuery.sizeOf(context).width / 2
-                                      : MediaQuery.sizeOf(context).width,
+
                                   padding: chat["user"] == 0
                                       ? const EdgeInsets.only(
                                           left: 10, right: 10)
                                       : null,
-                                  constraints: BoxConstraints(
-                                    maxWidth: MediaQuery.sizeOf(context)
-                                        .width, // Limit max width
-                                  ),
+                                  constraints: chat["user"]==0?BoxConstraints(
+                                    minWidth: MediaQuery.sizeOf(context).width/3,
+                                    maxWidth: MediaQuery.sizeOf(context).width/1
+                                  ):null,
                                   child: Column(
                                     children: [
                                       Column(
@@ -184,18 +225,19 @@ class Homepage extends StatelessWidget {
                                                             "assets/photo.jpg"),
                                                   ),
                                                 )
-                                              : const Align(
+                                              : Align(
                                                   alignment: Alignment.topLeft,
                                                   child: Padding(
-                                                    padding: EdgeInsets.only(
-                                                        left: 10.0),
-                                                    child: CircleAvatar(
-                                                      radius: 13,
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            left: 10.0),
+                                                    child: Image.asset(
+                                                      "assets/f1.png",
+                                                      width: 50,
+                                                      height: 50,
                                                     ),
                                                   )),
-                                          SizedBox(
-                                            height: 10,
-                                          ),
+
                                           Container(
                                             decoration: BoxDecoration(
                                                 color: chat["user"] == 0
@@ -213,35 +255,30 @@ class Homepage extends StatelessWidget {
                                             child: Padding(
                                               padding: const EdgeInsets.only(
                                                   left: 18,
-                                                  top: 10,
+                                                  top: 10,right: 10,
                                                   bottom: 10),
-                                              child: SizedBox(
-                                                width:
-                                                    MediaQuery.sizeOf(context)
-                                                        .width,
-                                                child: InkWell(
-                                                  onLongPress: chat["user"] == 0
-                                                      ? () {
-                                                          controller
-                                                                  .chatController
-                                                                  .text =
-                                                              chat["text"];
-                                                        }
-                                                      : null,
-                                                  child: Text(
-                                                    "${chat["text"]}",
-                                                    style: TextStyle(
-                                                        color: chat["user"] == 0
-                                                            ? const Color(
-                                                                0xffFF50FB)
-                                                            : Colors.white,
-                                                        fontSize:
-                                                            chat["user"] == 0
-                                                                ? 18
-                                                                : 17,
-                                                        fontWeight:
-                                                            FontWeight.bold),
-                                                  ),
+                                              child: InkWell(
+                                                onLongPress: chat["user"] == 0
+                                                    ? () {
+                                                        controller
+                                                                .chatController
+                                                                .text =
+                                                            chat["text"];
+                                                      }
+                                                    : null,
+                                                child: Text(softWrap: true,
+                                                  "${chat["text"]}",
+                                                  style: TextStyle(
+                                                      color: chat["user"] == 0
+                                                          ? const Color(
+                                                              0xffFF50FB)
+                                                          : Colors.white,
+                                                      fontSize:
+                                                          chat["user"] == 0
+                                                              ? 18
+                                                              : 17,
+                                                      fontWeight:
+                                                          FontWeight.bold),
                                                 ),
                                               ),
                                             ),
@@ -254,9 +291,9 @@ class Homepage extends StatelessWidget {
                                                 Obx(
                                                   () => IconButton(
                                                     onPressed: () {
-                                                      controller.isLike?.value =
+                                                      controller.isLike.value =
                                                           !controller
-                                                              .isLike!.value;
+                                                              .isLike.value;
                                                       // controller.like.add(element)
                                                       // controller.index=index;
                                                       // controller.like[index] =
@@ -264,7 +301,7 @@ class Homepage extends StatelessWidget {
                                                       //         .like[index];
                                                     },
                                                     icon: Icon(
-                                                        controller.isLike!.value
+                                                        controller.isLike.value
                                                             ? Icons
                                                                 .thumb_up_alt_outlined
                                                             : Icons.thumb_up,
@@ -333,43 +370,44 @@ class Homepage extends StatelessWidget {
                       color: const Color(0xff1E1F20),
                       child: Padding(
                         padding: const EdgeInsets.only(left: 23, bottom: 3),
-                        child: TextFormField(
-                          style: const TextStyle(color: Colors.white),
-                          cursorColor: Colors.white,
-                          keyboardType: TextInputType.multiline,
-                          maxLines: null,
-                          controller: controller.chatController,
-                          textInputAction: TextInputAction.newline,
-                          onEditingComplete: () {},
-                          decoration: InputDecoration(
-                            suffix: IconButton(
-                              onPressed: () {
-                                FocusScope.of(context)
-                                    .requestFocus(FocusNode());
-                                try {
-                                  controller
-                                      .getQuery(controller.chatController.text);
+                        child: controller.userQuery != null
+                            ? TextFormField(
+                                style: const TextStyle(color: Colors.white),
+                                cursorColor: Colors.white,
+                                keyboardType: TextInputType.multiline,
+                                maxLines: null,
+                                controller: controller.chatController,
+                                textInputAction: TextInputAction.newline,
+                                onEditingComplete: () {},
+                                decoration: InputDecoration(
+                                  suffix: IconButton(
+                                    onPressed: () {
+                                      FocusScope.of(context)
+                                          .requestFocus(FocusNode());
+                                      try {
+                                        controller.getQuery(
+                                            controller.chatController.text);
 
-
-                                  controller.chatController.clear();
-                                  controller.queryResult();
-                                } catch (e, stackTrace) {
-                                  print("error $e,$stackTrace");
-                                }
-                              },
-                              icon: const Icon(
-                                Icons.send_rounded,
-                                color: Colors.white,
-                                size: 25,
-                              ),
-                            ),
-                            hintText: "Chat with Ai Buddy",
-                            hintStyle: const TextStyle(
-                                overflow: TextOverflow.ellipsis,
-                                color: Colors.white),
-                            border: InputBorder.none,
-                          ),
-                        ),
+                                        controller.chatController.clear();
+                                        controller.queryResult();
+                                      } catch (e, stackTrace) {
+                                        print("error $e,$stackTrace");
+                                      }
+                                    },
+                                    icon: const Icon(
+                                      Icons.send_rounded,
+                                      color: Colors.white,
+                                      size: 25,
+                                    ),
+                                  ),
+                                  hintText: "Chat with Ai Buddy",
+                                  hintStyle: const TextStyle(
+                                      overflow: TextOverflow.ellipsis,
+                                      color: Colors.white),
+                                  border: InputBorder.none,
+                                ),
+                              )
+                            : const CircularProgressIndicator(),
                       ),
                     ),
                   ),

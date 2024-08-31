@@ -1,11 +1,12 @@
-import 'package:ai_chatboat/controller/splash_controller.dart';
-import 'package:ai_chatboat/model/theme/gradiant_text.dart';
-import 'package:ai_chatboat/view/animation/hello_animation.dart';
-import 'package:ai_chatboat/view/auth/signup.dart';
 
-import 'package:ai_chatboat/view/commen_heading_text/heading_text.dart';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+import '../controller/splash_controller.dart';
+import 'animation/hello_animation.dart';
+import 'auth/signup.dart';
+import 'commen_heading_text/heading_text.dart';
 
 class HelloSplash extends StatelessWidget {
   final SplashController controller = Get.put(SplashController());
