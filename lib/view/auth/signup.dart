@@ -125,7 +125,7 @@ class Signup extends StatelessWidget {
                           validator: (value) {
                             if (value?.isEmpty ?? false) {
                               return "*Plz Enter password";
-                            } else if (value?.contains("#")??false) {
+                            } else if (value?.contains("#") ?? false) {
                               return null;
                             } else {
                               return "Enter valid password";
@@ -187,7 +187,11 @@ class Signup extends StatelessWidget {
                           ),
                         ),
                         onPressed: () {
-                          controller.signUp();
+                          Future.delayed(const Duration(seconds: 2)).then(
+                            (value) {
+                              controller.signUp();
+                            },
+                          );
                         },
                         child: Text(
                           "Continue",
@@ -212,7 +216,7 @@ class Signup extends StatelessWidget {
                             width: 4,
                           ),
                           TextButton(
-                            style: ButtonStyle(
+                            style: const ButtonStyle(
                                 side: WidgetStatePropertyAll(
                                     BorderSide(color: Colors.transparent))),
                             onPressed: () {
@@ -288,7 +292,7 @@ class Signup extends StatelessWidget {
                           ),
                         ),
                         onPressed: () {
-                          controller.signInWithFaceBook();
+                          // controller.signInWithFaceBook();
                         },
                         child: FittedBox(
                           fit: BoxFit.cover,

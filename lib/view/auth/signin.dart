@@ -101,7 +101,7 @@ class SignInPage extends StatelessWidget {
                               validator: (value) {
                                 if (value?.isEmpty ?? false) {
                                   return "Plz Enter password*";
-                                } else if (value?.contains("#")??false) {
+                                } else if (value?.contains("#") ?? false) {
                                   return null;
                                 } else {
                                   return "Enter valid password*";
@@ -158,6 +158,22 @@ class SignInPage extends StatelessWidget {
                             onPressed: () {
                               controller.login(controller.loginEmail.text,
                                   controller.loginPassword.text);
+                              // showDialog(
+                              //   context: context,
+                              //   builder: (context) {
+                              //     return Center(
+                              //       child: Container(
+                              //         height:
+                              //             MediaQuery.sizeOf(context).width / 2,
+                              //         child: const AlertDialog(
+                              //           title: Text("wait for response"),
+                              //           content: Center(
+                              //               child: CircularProgressIndicator()),
+                              //         ),
+                              //       ),
+                              //     );
+                              //   },
+                              // );
                             },
                             child: Text(
                               "Continue",

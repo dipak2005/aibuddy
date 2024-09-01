@@ -37,13 +37,40 @@ class HomeController extends GetxController {
   RxBool isdIsLike = false.obs;
   RxBool isSound = false.obs;
   RxBool isPlay = false.obs;
+  RxBool isCopy = false.obs;
 
-  RxList<bool> like = <bool>[].obs;
+  // RxList<UserQuery> likeList = <UserQuery>[UserQuery(isLike: false,isDisLike: false)].obs;
+  // RxList<UserQuery> dislikeList = <UserQuery>[].obs;
+
+  List<ListItem> likeList = [];
+  List<ListItem> dislikeList = [];
 
   // this is the init state function the when the homepage is initialize then the function is executed for only one time
 
+  @override
   void onInit() async {
+    Future.delayed(
+      const Duration(milliseconds: 100),
+      () {
+        if (index > 1) {
+          itemScrollController.scrollTo(
+              index: index - 1,
+              duration: const Duration(milliseconds: 100),
+              curve: Curves.bounceInOut);
+        }
+      },
+    );
+    FirebaseFirestore.instance.collection("User").doc(user?.email).get().then(
+      (value) {
+        print("calling");
+      },
+    );
     super.onInit();
+  }
+
+  void toggleLike(int index) {
+    likeList[index].isLike.value = !(likeList[index].isLike.value);
+    update();
   }
 
   void shareContent(String text) async {
@@ -92,39 +119,38 @@ class HomeController extends GetxController {
       // call the api
       qnaModel = await apiHelper.getApiData(query);
 
-      // store the data using firebase when current platform is web
       var docRef =
           FirebaseFirestore.instance.collection("User").doc(user?.email);
 
-      await docRef.collection("userQuery").doc(DateTime.now().toString()).set(
-          UserQuery(
-                  text: qnaModel?.bodyModel?[0].content?.parts?[0].text,
-                  datetime:
-                      "${DateTime.now().hour}:${DateTime.now().minute}:${DateTime.now().second}",
-                  user: 1,
-                  email: user?.email,
-                  isLike: isLike.value,
-                  isDisLike: !isLike.value)
-              .toJson());
+      await docRef
+          .collection("userQuery")
+          .doc(DateTime.now().toString())
+          .set(UserQuery(
+            text: qnaModel?.bodyModel?[0].content?.parts?[0].text,
+            datetime:
+                "${DateTime.now().hour}:${DateTime.now().minute}:${DateTime.now().second}",
+            user: 1,
+            email: user?.email,
+          ).toJson());
     } else {
       qnaModel = QnaModel();
       var docRef = FirebaseFirestore.instance.collection("User").doc();
 
-      await docRef.collection("userQuery").doc(DateTime.now().toString()).set(
-          UserQuery(
-                  text: "something went wrong",
-                  datetime: "${DateTime.now().hour}:${DateTime.now().minute}",
-                  user: 1,
-                  email: user?.email,
-                  isDisLike: !isLike.value,
-                  isLike: isLike.value)
-              .toJson());
+      await docRef
+          .collection("userQuery")
+          .doc(DateTime.now().toString())
+          .set(UserQuery(
+            text: "something went wrong",
+            datetime: "${DateTime.now().hour}:${DateTime.now().minute}",
+            user: 1,
+            email: user?.email,
+          ).toJson());
     }
   }
 
   Future<void> getQuery(String queries) async {
     query = queries;
-    isLike = false.obs;
+    isCopy = false.obs;
     print("message:$query");
     qnaModel = null;
     if (user?.email != null) {
@@ -137,14 +163,12 @@ class HomeController extends GetxController {
             .collection("userQuery")
             .doc(DateTime.now().toString())
             .set(UserQuery(
-                    text: queries,
-                    datetime:
-                        "${DateTime.now().hour}:${DateTime.now().minute}:${DateTime.now().second}",
-                    user: 0,
-                    email: user?.email,
-                    isLike: isLike.value,
-                    isDisLike: !isLike.value)
-                .toJson());
+              text: queries,
+              datetime:
+                  "${DateTime.now().hour}:${DateTime.now().minute}:${DateTime.now().second}",
+              user: 0,
+              email: user?.email,
+            ).toJson());
       }
     }
   }

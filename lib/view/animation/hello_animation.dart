@@ -55,7 +55,7 @@ class _HelloAiState extends State<HelloAi> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    var theme = Theme.of(context);
+
 
     return SizedBox(
       width: size.height / 2,

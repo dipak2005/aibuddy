@@ -52,7 +52,7 @@ class HelloSplash extends StatelessWidget {
               height: 50,
             ),
             const Center(child: HelloAi()),
-            EnterenceText(),
+            const EnterenceText(),
             const SizedBox(
               height: 10,
             ),

@@ -15,7 +15,7 @@ class SignupController extends GetxController {
   GlobalKey<FormState> gsKey = GlobalKey<FormState>();
 
   // for signIn page
-  final   scaffoldKey = GlobalKey<ScaffoldState>();
+  final scaffoldKey = GlobalKey<ScaffoldState>();
 
   GlobalKey<ScaffoldState> get gKey => scaffoldKey;
 
@@ -35,21 +35,21 @@ class SignupController extends GetxController {
       RegExp("r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}");
 
   // r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$'
-  String isStrong(String value) {
-    if (!value.contains("?=.*[A-Z]") ?? false) {
-      return "Enter at least one upper case*";
-    } else if (!value.contains("?=.*[a-z]")) {
-      return "Enter at least one lower case*";
-    } else if (!value.contains("?=.*?[0-9]")) {
-      return "Enter at least one digit*";
-    } else if (!value.contains("?=.*?[!@#\$&*~]")) {
-      return "Enter at least one special character*";
-    } else if (!value.contains(".{8,} ")) {
-      return "Enter at least Eight character password";
-    } else {
-      return "";
-    }
-  }
+  // String isStrong(String value) {
+  //   if (!value.contains("?=.*[A-Z]") ?? false) {
+  //     return "Enter at least one upper case*";
+  //   } else if (!value.contains("?=.*[a-z]")) {
+  //     return "Enter at least one lower case*";
+  //   } else if (!value.contains("?=.*?[0-9]")) {
+  //     return "Enter at least one digit*";
+  //   } else if (!value.contains("?=.*?[!@#\$&*~]")) {
+  //     return "Enter at least one special character*";
+  //   } else if (!value.contains(".{8,} ")) {
+  //     return "Enter at least Eight character password";
+  //   } else {
+  //     return "";
+  //   }
+  // }
 
   // for signUp page
   void signUp() async {
@@ -62,6 +62,8 @@ class SignupController extends GetxController {
                 email: email.text, password: password.text);
         AddUserModel().addUser(user.user);
         print("is calling or not");
+        ScaffoldMessenger.of(Get.context!).showSnackBar(
+            const SnackBar(content: Text("User Added Successfully")));
         Timer(
           const Duration(milliseconds: 200),
           () {
@@ -70,7 +72,15 @@ class SignupController extends GetxController {
         );
       }
     } on FirebaseAuthException catch (e) {
-      Text("error ${e.code.toString()}");
+      if (e.code == 'email-already-in-use') {
+        print("hii loggined");
+        ScaffoldMessenger.of(Get.context!).showSnackBar(const SnackBar(
+          content: Text("User Already Login"),
+          backgroundColor: Colors.red,
+        ));
+      } else {
+        print('Failed to register: ${e.message}');
+      }
     }
   }
 
@@ -81,6 +91,12 @@ class SignupController extends GetxController {
         FocusScope.of(Get.context!).unfocus();
         await FirebaseAuth.instance
             .signInWithEmailAndPassword(email: email, password: password);
+        ScaffoldMessenger.of(Get.context!).showSnackBar(
+          const SnackBar(
+            content: Text("User signIn Successfully"),
+            backgroundColor: Colors.green,
+          ),
+        );
         Timer(
           const Duration(milliseconds: 200),
           () {
@@ -114,13 +130,17 @@ class SignupController extends GetxController {
     );
   }
 
-  Future<void> signInWithFaceBook() async {
-    FacebookAuthProvider data = FacebookAuthProvider();
-    Get.to(() => Homepage());
-  }
+  // Future<void> signInWithFaceBook() async {
+  //   FacebookAuthProvider data = FacebookAuthProvider();
+  //   Get.to(() => Homepage());
+  // }
 
   @override
   void dispose() {
+    password.clear();
+    email.clear();
+    loginEmail.clear();
+    loginPassword.clear();
     email.dispose();
     password.dispose();
     loginPassword.dispose();

@@ -1,6 +1,9 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'dart:async';
+
 import 'package:ai_chatboat/controller/home_controller.dart';
+import 'package:ai_chatboat/model/helper_class/api_helper.dart';
 import 'package:ai_chatboat/model/util.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
@@ -14,6 +17,7 @@ class Homepage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var user = FirebaseAuth.instance.currentUser;
+    int index;
     return Scaffold(
       backgroundColor: Colors.black.withOpacity(0.96),
       appBar: AppBar(
@@ -111,7 +115,7 @@ class Homepage extends StatelessWidget {
                               .doc(user?.email) // Handle null email
                               .collection("userQuery")
                               .snapshots()
-                          : null,
+                          : Stream.empty(),
                       builder: (context, snapshot) {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
@@ -139,26 +143,41 @@ class Homepage extends StatelessWidget {
                                             crossAxisCount: 2),
                                     itemBuilder:
                                         (BuildContext context, int index) {
-                                     Map<String,dynamic> list= DataClass().queList[index];
+                                      Map<String, dynamic> list =
+                                          DataClass().queList[index];
+
                                       return InkWell(
                                         onTap: () {
-                                          controller.chatController.text=list["text"];
+                                          controller.chatController.text =
+                                              list["text"];
                                         },
                                         child: Container(
                                           height: 150,
-                                          width: 150,margin: EdgeInsets.all(10),
-                                          decoration:
-                                              BoxDecoration(color: Color(0xff1E1F20),borderRadius: BorderRadius.circular(10)),
+                                          width: 150,
+                                          margin: EdgeInsets.all(10),
+                                          decoration: BoxDecoration(
+                                              color: Color(0xff1E1F20),
+                                              borderRadius:
+                                                  BorderRadius.circular(10)),
                                           child: Column(
-                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
                                             children: [
-                                              Icon(list["icon"],color: list["color"],),
+                                              Icon(
+                                                list["icon"],
+                                                color: list["color"],
+                                              ),
                                               SizedBox(
                                                 height: 10,
                                               ),
                                               Padding(
-                                                padding: const EdgeInsets.all(8.0),
-                                                child: Text(list["label"],style: TextStyle(color: Colors.white),),
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: Text(
+                                                  list["label"],
+                                                  style: TextStyle(
+                                                      color: Colors.white),
+                                                ),
                                               )
                                             ],
                                           ),
@@ -185,21 +204,26 @@ class Homepage extends StatelessWidget {
                               final uQuery = data[index];
                               final chat =
                                   uQuery.data() as Map<String, dynamic>;
-                              chat;
+                              controller.index = data.length;
+                              final int userType = chat["user"] ?? -1;
                               return Align(
-                                alignment: chat["user"] == 0
+                                alignment: userType == 0
                                     ? Alignment.bottomRight
                                     : Alignment.bottomLeft,
                                 child: Container(
-
-                                  padding: chat["user"] == 0
+                                  padding: userType == 0
                                       ? const EdgeInsets.only(
                                           left: 10, right: 10)
                                       : null,
-                                  constraints: chat["user"]==0?BoxConstraints(
-                                    minWidth: MediaQuery.sizeOf(context).width/3,
-                                    maxWidth: MediaQuery.sizeOf(context).width/1
-                                  ):null,
+                                  constraints: userType == 0
+                                      ? BoxConstraints(
+                                          minWidth:
+                                              MediaQuery.sizeOf(context).width /
+                                                  3,
+                                          maxWidth:
+                                              MediaQuery.sizeOf(context).width /
+                                                  1.1)
+                                      : null,
                                   child: Column(
                                     children: [
                                       Column(
@@ -207,22 +231,37 @@ class Homepage extends StatelessWidget {
                                             CrossAxisAlignment.center,
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
-                                          chat["user"] == 0
+                                          userType == 0
                                               ? Align(
                                                   alignment: Alignment.topRight,
-                                                  child: CircleAvatar(
-                                                    radius: 13,
-                                                    backgroundColor:
-                                                        Colors.white,
-                                                    backgroundImage: user
-                                                                ?.photoURL
-                                                                ?.isNotEmpty ??
-                                                            false
-                                                        ? NetworkImage(
-                                                            user?.photoURL ??
-                                                                "")
-                                                        : const AssetImage(
-                                                            "assets/photo.jpg"),
+                                                  child: InkWell(
+                                                    onTap: () {
+                                                      showModalBottomSheet(
+                                                        context: context,
+                                                        builder: (context) {
+                                                          return SizedBox(
+                                                              height: 50,
+                                                              child: Center(
+                                                                  child: Text(
+                                                                      user?.email ??
+                                                                          "")));
+                                                        },
+                                                      );
+                                                    },
+                                                    child: CircleAvatar(
+                                                      radius: 13,
+                                                      backgroundColor:
+                                                          Colors.white,
+                                                      backgroundImage: user
+                                                                  ?.photoURL
+                                                                  ?.isNotEmpty ??
+                                                              false
+                                                          ? NetworkImage(
+                                                              user?.photoURL ??
+                                                                  "")
+                                                          : const AssetImage(
+                                                              "assets/photo.jpg"),
+                                                    ),
                                                   ),
                                                 )
                                               : Align(
@@ -231,16 +270,24 @@ class Homepage extends StatelessWidget {
                                                     padding:
                                                         const EdgeInsets.only(
                                                             left: 10.0),
-                                                    child: Image.asset(
-                                                      "assets/f1.png",
-                                                      width: 50,
-                                                      height: 50,
+                                                    child: Container(
+                                                      width: 100,
+                                                      decoration: BoxDecoration(
+                                                          color: Colors
+                                                              .transparent,
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      40)),
+                                                      child: Image.asset(
+                                                        "assets/f1.png",
+                                                      ),
                                                     ),
                                                   )),
-
                                           Container(
+                                            margin: EdgeInsets.all(10),
                                             decoration: BoxDecoration(
-                                                color: chat["user"] == 0
+                                                color: userType == 0
                                                     ? Colors.white
                                                     : Colors.transparent,
                                                 borderRadius:
@@ -248,17 +295,14 @@ class Homepage extends StatelessWidget {
                                                         bottomRight:
                                                             Radius.circular(30),
                                                         bottomLeft:
-                                                            Radius.circular(30),
+                                                            Radius.circular(20),
                                                         topLeft:
                                                             Radius.circular(
-                                                                30))),
+                                                                20))),
                                             child: Padding(
-                                              padding: const EdgeInsets.only(
-                                                  left: 18,
-                                                  top: 10,right: 10,
-                                                  bottom: 10),
+                                              padding: const EdgeInsets.all(10),
                                               child: InkWell(
-                                                onLongPress: chat["user"] == 0
+                                                onLongPress: userType == 0
                                                     ? () {
                                                         controller
                                                                 .chatController
@@ -266,17 +310,17 @@ class Homepage extends StatelessWidget {
                                                             chat["text"];
                                                       }
                                                     : null,
-                                                child: Text(softWrap: true,
+                                                child: Text(
+                                                  softWrap: true,
                                                   "${chat["text"]}",
                                                   style: TextStyle(
-                                                      color: chat["user"] == 0
+                                                      color: userType == 0
                                                           ? const Color(
                                                               0xffFF50FB)
                                                           : Colors.white,
-                                                      fontSize:
-                                                          chat["user"] == 0
-                                                              ? 18
-                                                              : 17,
+                                                      fontSize: userType == 0
+                                                          ? 18
+                                                          : 17,
                                                       fontWeight:
                                                           FontWeight.bold),
                                                 ),
@@ -285,71 +329,36 @@ class Homepage extends StatelessWidget {
                                           ),
                                         ],
                                       ),
-                                      chat["user"] == 1
-                                          ? Row(
-                                              children: [
-                                                Obx(
-                                                  () => IconButton(
-                                                    onPressed: () {
-                                                      controller.isLike.value =
-                                                          !controller
-                                                              .isLike.value;
-                                                      // controller.like.add(element)
-                                                      // controller.index=index;
-                                                      // controller.like[index] =
-                                                      //     !controller
-                                                      //         .like[index];
-                                                    },
-                                                    icon: Icon(
-                                                        controller.isLike.value
-                                                            ? Icons
-                                                                .thumb_up_alt_outlined
-                                                            : Icons.thumb_up,
-                                                        color: Colors.white),
-                                                  ),
-                                                ),
-                                                Obx(
-                                                  () => IconButton(
-                                                    onPressed: () {
-                                                      controller
-                                                              .isdIsLike.value =
-                                                          !controller
-                                                              .isdIsLike.value;
-                                                      chat["isDisLike"] = true;
-                                                    },
-                                                    icon: Icon(
-                                                        controller
-                                                                .isdIsLike.value
-                                                            ? Icons
-                                                                .thumb_down_alt_outlined
-                                                            : Icons.thumb_down,
-                                                        color: Colors.white),
-                                                  ),
-                                                ),
-                                                IconButton(
-                                                    onPressed: () {
-                                                      controller.shareContent(
-                                                          chat["text"]);
-                                                    },
-                                                    icon: const Icon(
-                                                      Icons.share_outlined,
-                                                      color: Colors.white,
-                                                    )),
-                                                IconButton(
-                                                    onPressed: () {
-                                                      controller
-                                                          .copy(chat["text"]);
-                                                    },
-                                                    icon: const Icon(
-                                                      Icons.copy,
-                                                      color: Colors.white,
-                                                    ))
-                                              ],
-                                            )
-                                          : const SizedBox.shrink(),
-                                      const SizedBox(
-                                        height: 70,
-                                      )
+                                      if (userType == 1)
+                                        Row(
+                                          children: [
+                                            IconButton(
+                                                onPressed: () {
+                                                  controller.shareContent(
+                                                      chat["text"]);
+                                                },
+                                                icon: const Icon(
+                                                  Icons.share_outlined,
+                                                  color: Colors.white,
+                                                )),
+                                            IconButton(
+                                                onPressed: () {
+                                                  controller.copy(chat["text"]);
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(SnackBar(
+                                                          backgroundColor:
+                                                              Colors.green,
+                                                          content: Text(
+                                                              "Copied Successful ")));
+                                                },
+                                                icon: const Icon(
+                                                  Icons.copy,
+                                                  color: Colors.white,
+                                                ))
+                                          ],
+                                        )
+                                      // else
+                                      // const SizedBox.shrink(),
                                     ],
                                   ),
                                 ),
@@ -372,14 +381,22 @@ class Homepage extends StatelessWidget {
                         padding: const EdgeInsets.only(left: 23, bottom: 3),
                         child: controller.userQuery != null
                             ? TextFormField(
+                                onFieldSubmitted: (value) {
+                                  if (value.isNotEmpty) {
+                                    controller.getQuery(value);
+                                  }
+                                },
                                 style: const TextStyle(color: Colors.white),
                                 cursorColor: Colors.white,
                                 keyboardType: TextInputType.multiline,
                                 maxLines: null,
                                 controller: controller.chatController,
                                 textInputAction: TextInputAction.newline,
-                                onEditingComplete: () {},
                                 decoration: InputDecoration(
+                                  prefixIcon: Icon(
+                                    Icons.keyboard,
+                                    color: Colors.white,
+                                  ),
                                   suffix: IconButton(
                                     onPressed: () {
                                       FocusScope.of(context)
@@ -387,9 +404,14 @@ class Homepage extends StatelessWidget {
                                       try {
                                         controller.getQuery(
                                             controller.chatController.text);
-
+                                        controller.itemScrollController.jumpTo(
+                                            index: controller.index - 1);
                                         controller.chatController.clear();
+
                                         controller.queryResult();
+                                        controller.itemScrollController.jumpTo(
+                                            index: controller.index - 1);
+
                                       } catch (e, stackTrace) {
                                         print("error $e,$stackTrace");
                                       }
@@ -409,6 +431,32 @@ class Homepage extends StatelessWidget {
                               )
                             : const CircularProgressIndicator(),
                       ),
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 100,
+                    left: 290,
+                    right: 20,
+                    child: Container(
+                      height: 50,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.white),
+                      child: IconButton(
+                          onPressed: () {
+                            if (controller.index > 0) {
+                              controller.itemScrollController
+                                  .jumpTo(index: controller.index - 1);
+                              controller.itemScrollController.scrollTo(
+                                  index: controller.index - 1,
+                                  duration: Duration(milliseconds: 100));
+                              print("index:${controller.index}");
+                            }
+                          },
+                          icon: Icon(
+                            Icons.arrow_downward_outlined,
+                            color: Color(0xffFF50FB),
+                          )),
                     ),
                   ),
                 ],

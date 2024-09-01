@@ -7,7 +7,7 @@ class EnterenceText extends StatelessWidget {
   static final HeadingTextController controller =
       Get.put(HeadingTextController());
 
-  EnterenceText({super.key});
+  const EnterenceText({super.key});
 
   @override
   Widget build(BuildContext context) {

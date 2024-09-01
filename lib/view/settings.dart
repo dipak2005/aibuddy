@@ -1,10 +1,9 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'package:ai_chatboat/controller/home_controller.dart';
+
 import 'package:ai_chatboat/controller/settingsController.dart';
 import 'package:ai_chatboat/model/export_libreary.dart';
-import 'package:ai_chatboat/model/util.dart';
-import 'package:url_launcher/url_launcher.dart';
+
 
 class SettingPage extends StatelessWidget {
   final SettingsController controller = Get.put(SettingsController());
