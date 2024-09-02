@@ -48,7 +48,8 @@ class _HelloAiState extends State<HelloAi> with TickerProviderStateMixin {
   void dispose() {
     _controller.dispose();
     _controller2.dispose();
-
+    _alignAnimation;
+    sizeAnimation;
     super.dispose();
   }
 

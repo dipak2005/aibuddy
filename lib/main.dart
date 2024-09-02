@@ -1,4 +1,4 @@
-import 'package:ai_chatboat/view/settings.dart';
+
 
 import 'firebase_options.dart';
 import 'model/export_libreary.dart';
@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
       routes: {
         "/": (p0) => HelloSplash(),
         "home": (p0) => Homepage(),
-        "settings": (p0) =>  SettingPage(),
+
       },
     );
   }

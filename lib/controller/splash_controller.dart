@@ -2,10 +2,8 @@
 
 
 
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
-import '../view/homepage.dart';
+import '../model/export_libreary.dart';
 
 class SplashController extends GetxController {
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
@@ -21,5 +19,10 @@ class SplashController extends GetxController {
 
   void goto() {
     Get.off(() => Homepage());
+  }
+  @override
+  void dispose() {
+
+    super.dispose();
   }
 }

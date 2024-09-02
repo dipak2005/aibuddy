@@ -1,12 +1,5 @@
 
-
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-
-import '../controller/splash_controller.dart';
-import 'animation/hello_animation.dart';
-import 'auth/signup.dart';
-import 'commen_heading_text/heading_text.dart';
+import '../model/export_libreary.dart';
 
 class HelloSplash extends StatelessWidget {
   final SplashController controller = Get.put(SplashController());

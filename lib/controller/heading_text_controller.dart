@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+
+import '../model/export_libreary.dart';
 
 class HeadingTextController extends GetxController {
   final scaffoldKey = GlobalKey<ScaffoldState>();

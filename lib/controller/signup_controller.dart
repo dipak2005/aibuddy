@@ -1,11 +1,6 @@
 import 'dart:async';
-import 'package:ai_chatboat/view/homepage.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 
-import '../model/singleton_class/add_user_class.dart';
+import '../model/export_libreary.dart';
 
 class SignupController extends GetxController {
   // for first time users
@@ -20,12 +15,13 @@ class SignupController extends GetxController {
   GlobalKey<ScaffoldState> get gKey => scaffoldKey;
 
   // for signUp page
-  TextEditingController email = TextEditingController();
-  TextEditingController password = TextEditingController();
+  late TextEditingController email;
+
+ late  TextEditingController password;
 
   // for signIn page
-  TextEditingController loginEmail = TextEditingController();
-  TextEditingController loginPassword = TextEditingController();
+ late TextEditingController loginEmail;
+  late TextEditingController loginPassword;
 
   // visibility on
   RxBool isShow = true.obs;
@@ -33,6 +29,16 @@ class SignupController extends GetxController {
   RxBool isNext = false.obs;
   RegExp pattern =
       RegExp("r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}");
+
+  @override
+  void onInit() {
+    email = TextEditingController();
+   password=TextEditingController();
+   loginEmail=TextEditingController();
+   loginPassword=TextEditingController();
+
+    super.onInit();
+  }
 
   // r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$'
   // String isStrong(String value) {
@@ -137,14 +143,11 @@ class SignupController extends GetxController {
 
   @override
   void dispose() {
-    password.clear();
-    email.clear();
-    loginEmail.clear();
-    loginPassword.clear();
     email.dispose();
     password.dispose();
     loginPassword.dispose();
     loginEmail.dispose();
+    update();
     super.dispose();
   }
 }

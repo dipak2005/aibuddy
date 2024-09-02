@@ -1,12 +1,4 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'dart:async';
-
-import 'package:ai_chatboat/controller/home_controller.dart';
-import 'package:ai_chatboat/model/helper_class/api_helper.dart';
-import 'package:ai_chatboat/model/util.dart';
-import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
-
 import '../model/export_libreary.dart';
 
 class Homepage extends StatelessWidget {
@@ -16,8 +8,8 @@ class Homepage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var user = FirebaseAuth.instance.currentUser;
-    int index;
+    User? user = FirebaseAuth.instance.currentUser;
+
     return Scaffold(
       backgroundColor: Colors.black.withOpacity(0.96),
       appBar: AppBar(
@@ -41,54 +33,56 @@ class Homepage extends StatelessWidget {
         ),
         actions: [
           Padding(
-            padding: EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(8.0),
             child: IconButton(
                 onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(
-                        content: const Text(
-                          "Are you sure want to Logout??",
-                          style: TextStyle(color: Colors.red, fontSize: 17),
-                        ),
-                        icon: Image.asset(
-                          "assets/warning.png",
-                          height: 40,
-                          width: 30,
-                        ),
-                        title: const Text(
-                          "Logout",
-                          style: TextStyle(
-                              color: Colors.red, fontWeight: FontWeight.bold),
-                        ),
-                        actions: [
-                          TextButton(
-                              onPressed: () {
-                                Get.back();
-                              },
-                              child: const Text(
-                                "No",
-                                style: TextStyle(
-                                    color: Colors.red,
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 17),
-                              )),
-                          TextButton(
-                              onPressed: () {
-                                controller.signOut();
-                              },
-                              child: const Text(
-                                "Yes",
-                                style: TextStyle(
-                                    color: Colors.red,
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 17),
-                              ))
-                        ],
-                      );
-                    },
-                  );
+                  //   showDialog(
+                  //     context: context,
+                  //     builder: (context) {
+                  //       return AlertDialog(
+                  //         content: const Text(
+                  //           "Are you sure want to Logout??",
+                  //           style: TextStyle(color: Colors.red, fontSize: 17),
+                  //         ),
+                  //         icon: Image.asset(
+                  //           "assets/warning.png",
+                  //           height: 40,
+                  //           width: 30,
+                  //         ),
+                  //         title: const Text(
+                  //           "Logout",
+                  //           style: TextStyle(
+                  //               color: Colors.red, fontWeight: FontWeight.bold),
+                  //         ),
+                  //         actions: [
+                  //           TextButton(
+                  //               onPressed: () {
+                  //                 Get.back();
+                  //               },
+                  //               child: const Text(
+                  //                 "No",
+                  //                 style: TextStyle(
+                  //                     color: Colors.red,
+                  //                     fontWeight: FontWeight.w500,
+                  //                     fontSize: 17),
+                  //               )),
+                  //           TextButton(
+                  //               onPressed: () {
+                  //                 controller.isSignout.value = true;
+                  controller.signOut();
+
+                  //               },
+                  //               child: const Text(
+                  //                 "Yes",
+                  //                 style: TextStyle(
+                  //                     color: Colors.red,
+                  //                     fontWeight: FontWeight.w500,
+                  //                     fontSize: 17),
+                  //               ))
+                  //         ],
+                  //       );
+                  //     },
+                  //   );
                 },
                 icon: const Icon(
                   Icons.logout,
@@ -115,7 +109,7 @@ class Homepage extends StatelessWidget {
                               .doc(user?.email) // Handle null email
                               .collection("userQuery")
                               .snapshots()
-                          : Stream.empty(),
+                          : const Stream.empty(),
                       builder: (context, snapshot) {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
@@ -124,8 +118,8 @@ class Homepage extends StatelessWidget {
                           );
                         }
                         final data = snapshot.data?.docs ?? [];
-                        controller.trData = data;
-                        if (data.isEmpty) {
+                        controller.data.value = data;
+                        if (controller.data.isEmpty) {
                           return Center(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
@@ -139,7 +133,7 @@ class Homepage extends StatelessWidget {
                                   child: GridView.builder(
                                     itemCount: DataClass().queList.length,
                                     gridDelegate:
-                                        SliverGridDelegateWithFixedCrossAxisCount(
+                                        const SliverGridDelegateWithFixedCrossAxisCount(
                                             crossAxisCount: 2),
                                     itemBuilder:
                                         (BuildContext context, int index) {
@@ -154,9 +148,9 @@ class Homepage extends StatelessWidget {
                                         child: Container(
                                           height: 150,
                                           width: 150,
-                                          margin: EdgeInsets.all(10),
+                                          margin: const EdgeInsets.all(10),
                                           decoration: BoxDecoration(
-                                              color: Color(0xff1E1F20),
+                                              color: const Color(0xff1E1F20),
                                               borderRadius:
                                                   BorderRadius.circular(10)),
                                           child: Column(
@@ -167,7 +161,7 @@ class Homepage extends StatelessWidget {
                                                 list["icon"],
                                                 color: list["color"],
                                               ),
-                                              SizedBox(
+                                              const SizedBox(
                                                 height: 10,
                                               ),
                                               Padding(
@@ -175,7 +169,7 @@ class Homepage extends StatelessWidget {
                                                     const EdgeInsets.all(8.0),
                                                 child: Text(
                                                   list["label"],
-                                                  style: TextStyle(
+                                                  style: const TextStyle(
                                                       color: Colors.white),
                                                 ),
                                               )
@@ -190,36 +184,30 @@ class Homepage extends StatelessWidget {
                             ),
                           );
                         } else {
-                          return ScrollablePositionedList.builder(
-                            itemScrollController:
-                                controller.itemScrollController,
-                            scrollOffsetController:
-                                controller.scrollOffsetController,
-                            itemPositionsListener:
-                                controller.itemPositionsListener,
-                            scrollOffsetListener:
-                                controller.scrollOffsetListener,
+                          return ListView.builder(
+                            controller: controller.controller,
                             itemCount: data.length,
                             itemBuilder: (context, index) {
                               final uQuery = data[index];
                               final chat =
                                   uQuery.data() as Map<String, dynamic>;
-                              controller.index = data.length;
+                              var text = chat["text"];
+
+                              // count last text message length for scroll
+                              controller.index =
+                                  data.last.data().toString().length;
+
                               final int userType = chat["user"] ?? -1;
                               return Align(
                                 alignment: userType == 0
-                                    ? Alignment.bottomRight
-                                    : Alignment.bottomLeft,
+                                    ? Alignment.centerRight
+                                    : Alignment.centerLeft,
                                 child: Container(
-                                  padding: userType == 0
-                                      ? const EdgeInsets.only(
-                                          left: 10, right: 10)
-                                      : null,
                                   constraints: userType == 0
                                       ? BoxConstraints(
                                           minWidth:
                                               MediaQuery.sizeOf(context).width /
-                                                  3,
+                                                  3.01,
                                           maxWidth:
                                               MediaQuery.sizeOf(context).width /
                                                   1.1)
@@ -248,19 +236,24 @@ class Homepage extends StatelessWidget {
                                                         },
                                                       );
                                                     },
-                                                    child: CircleAvatar(
-                                                      radius: 13,
-                                                      backgroundColor:
-                                                          Colors.white,
-                                                      backgroundImage: user
-                                                                  ?.photoURL
-                                                                  ?.isNotEmpty ??
-                                                              false
-                                                          ? NetworkImage(
-                                                              user?.photoURL ??
-                                                                  "")
-                                                          : const AssetImage(
-                                                              "assets/photo.jpg"),
+                                                    child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              right: 8.0),
+                                                      child: CircleAvatar(
+                                                        radius: 13,
+                                                        backgroundColor:
+                                                            Colors.white,
+                                                        backgroundImage: user
+                                                                    ?.photoURL
+                                                                    ?.isNotEmpty ??
+                                                                false
+                                                            ? NetworkImage(
+                                                                user?.photoURL ??
+                                                                    "")
+                                                            : const AssetImage(
+                                                                "assets/photo.jpg"),
+                                                      ),
                                                     ),
                                                   ),
                                                 )
@@ -279,50 +272,77 @@ class Homepage extends StatelessWidget {
                                                               BorderRadius
                                                                   .circular(
                                                                       40)),
-                                                      child: Image.asset(
-                                                        "assets/f1.png",
+                                                      child: InkWell(
+                                                        onTap: () {
+                                                          showModalBottomSheet(
+                                                            context: context,
+                                                            builder: (context) {
+                                                              return const SizedBox(
+                                                                  height: 50,
+                                                                  child: Center(
+                                                                      child: Text(
+                                                                          "Hii i'm AiBuddy What can i help You ??😀😀")));
+                                                            },
+                                                          );
+                                                        },
+                                                        child: Image.asset(
+                                                          "assets/f1.png",
+                                                        ),
                                                       ),
                                                     ),
                                                   )),
-                                          Container(
-                                            margin: EdgeInsets.all(10),
-                                            decoration: BoxDecoration(
-                                                color: userType == 0
-                                                    ? Colors.white
-                                                    : Colors.transparent,
-                                                borderRadius:
-                                                    const BorderRadius.only(
-                                                        bottomRight:
-                                                            Radius.circular(30),
-                                                        bottomLeft:
-                                                            Radius.circular(20),
-                                                        topLeft:
-                                                            Radius.circular(
-                                                                20))),
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(10),
-                                              child: InkWell(
-                                                onLongPress: userType == 0
-                                                    ? () {
-                                                        controller
-                                                                .chatController
-                                                                .text =
-                                                            chat["text"];
-                                                      }
-                                                    : null,
-                                                child: Text(
-                                                  softWrap: true,
-                                                  "${chat["text"]}",
-                                                  style: TextStyle(
-                                                      color: userType == 0
-                                                          ? const Color(
-                                                              0xffFF50FB)
-                                                          : Colors.white,
-                                                      fontSize: userType == 0
-                                                          ? 18
-                                                          : 17,
-                                                      fontWeight:
-                                                          FontWeight.bold),
+                                          IntrinsicWidth(
+                                            child: IntrinsicHeight(
+                                              child: Container(
+                                                // padding: EdgeInsets.all(4),
+                                                margin:
+                                                    const EdgeInsets.all(15),
+                                                decoration: BoxDecoration(
+                                                    color: userType == 0
+                                                        ? Colors.white
+                                                        : Colors.transparent,
+                                                    borderRadius:
+                                                        const BorderRadius.only(
+                                                            topRight:
+                                                                Radius.circular(
+                                                                    17),
+                                                            bottomRight:
+                                                                Radius.circular(
+                                                                    17),
+                                                            bottomLeft:
+                                                                Radius.circular(
+                                                                    17),
+                                                            topLeft:
+                                                                Radius.circular(
+                                                                    17))),
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(10),
+                                                  child: InkWell(
+                                                    onLongPress: userType == 0
+                                                        ? () {
+                                                            controller
+                                                                    .chatController
+                                                                    .text =
+                                                                chat["text"];
+                                                          }
+                                                        : null,
+                                                    child: Text(
+                                                      softWrap: true,
+                                                      "${chat["text"]}",
+                                                      style: TextStyle(
+                                                          color: userType == 0
+                                                              ? const Color(
+                                                                  0xffFF50FB)
+                                                              : Colors.white,
+                                                          fontSize:
+                                                              userType == 0
+                                                                  ? 15
+                                                                  : 17,
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    ),
+                                                  ),
                                                 ),
                                               ),
                                             ),
@@ -345,7 +365,7 @@ class Homepage extends StatelessWidget {
                                                 onPressed: () {
                                                   controller.copy(chat["text"]);
                                                   ScaffoldMessenger.of(context)
-                                                      .showSnackBar(SnackBar(
+                                                      .showSnackBar(const SnackBar(
                                                           backgroundColor:
                                                               Colors.green,
                                                           content: Text(
@@ -357,8 +377,8 @@ class Homepage extends StatelessWidget {
                                                 ))
                                           ],
                                         )
-                                      // else
-                                      // const SizedBox.shrink(),
+                                      else
+                                        const SizedBox.shrink(),
                                     ],
                                   ),
                                 ),
@@ -369,6 +389,43 @@ class Homepage extends StatelessWidget {
                       },
                     ),
                   ),
+                  // (controller.showScrollButton.value)?
+
+                  Positioned(
+                    bottom: 100,
+                    left: 290,
+                    right: 20,
+                    child: controller.data.isNotEmpty
+                        ? Container(
+                            height: 50,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.white),
+                            child: IconButton(
+                                onPressed: () {
+                                  // if (controller.index > 0 &&
+                                  //     controller.itemScrollController != null) {
+                                  //   controller.itemScrollController
+                                  //       ?.jumpTo(index: controller.index);
+                                  //   controller.itemScrollController?.scrollTo(
+                                  //       index: controller.index,
+                                  //       duration: const Duration(milliseconds: 100),
+                                  //       curve: Curves.bounceInOut);
+
+                                  controller.scrollToBottom();
+                                  // controller.scrollListener();
+                                  print("index:${controller.index}");
+                                  // }
+                                },
+                                icon: const Icon(
+                                  Icons.arrow_downward_outlined,
+                                  color: Color(0xffFF50FB),
+                                )),
+                          )
+                        : const SizedBox.shrink(),
+                  ),
+                  // : SizedBox.shrink(),
+
                   Positioned(
                     bottom: 0,
                     left: 0,
@@ -378,95 +435,76 @@ class Homepage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(30)),
                       color: const Color(0xff1E1F20),
                       child: Padding(
-                        padding: const EdgeInsets.only(left: 23, bottom: 3),
+                        padding: const EdgeInsets.only(
+                          left: 23,
+                        ),
                         child: controller.userQuery != null
-                            ? TextFormField(
-                                onFieldSubmitted: (value) {
-                                  if (value.isNotEmpty) {
-                                    controller.getQuery(value);
-                                  }
-                                },
-                                style: const TextStyle(color: Colors.white),
-                                cursorColor: Colors.white,
-                                keyboardType: TextInputType.multiline,
-                                maxLines: null,
-                                controller: controller.chatController,
-                                textInputAction: TextInputAction.newline,
-                                decoration: InputDecoration(
-                                  prefixIcon: Icon(
-                                    Icons.keyboard,
-                                    color: Colors.white,
-                                  ),
-                                  suffix: IconButton(
-                                    onPressed: () {
-                                      FocusScope.of(context)
-                                          .requestFocus(FocusNode());
-                                      try {
-                                        controller.getQuery(
-                                            controller.chatController.text);
-                                        controller.itemScrollController.jumpTo(
-                                            index: controller.index - 1);
-                                        controller.chatController.clear();
-
-                                        controller.queryResult();
-                                        controller.itemScrollController.jumpTo(
-                                            index: controller.index - 1);
-
-                                      } catch (e, stackTrace) {
-                                        print("error $e,$stackTrace");
-                                      }
-                                    },
-                                    icon: const Icon(
-                                      Icons.send_rounded,
-                                      color: Colors.white,
-                                      size: 25,
+                            ? Row(
+                                children: [
+                                  Expanded(
+                                    child: TextFormField(
+                                      onFieldSubmitted: (value) {
+                                        if (value.isNotEmpty) {
+                                          controller.getQuery(value);
+                                        }
+                                      },
+                                      style:
+                                          const TextStyle(color: Colors.white),
+                                      cursorColor: Colors.white,
+                                      keyboardType: TextInputType.multiline,
+                                      maxLines: null,
+                                      controller: controller.chatController,
+                                      textInputAction: TextInputAction.newline,
+                                      decoration: const InputDecoration(
+                                        prefixIcon: Icon(
+                                          Icons.keyboard,
+                                          color: Colors.white,
+                                        ),
+                                        hintText: "Chat with Ai Buddy",
+                                        hintStyle: TextStyle(
+                                            overflow: TextOverflow.ellipsis,
+                                            color: Colors.white),
+                                        border: InputBorder.none,
+                                      ),
                                     ),
                                   ),
-                                  hintText: "Chat with Ai Buddy",
-                                  hintStyle: const TextStyle(
-                                      overflow: TextOverflow.ellipsis,
-                                      color: Colors.white),
-                                  border: InputBorder.none,
-                                ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: CircleAvatar(
+                                      radius: 23,
+                                      backgroundColor: Colors.white,
+                                      child: IconButton(
+                                        onPressed: () {
+                                          FocusScope.of(context)
+                                              .requestFocus(FocusNode());
+                                          try {
+                                            controller.getQuery(
+                                                controller.chatController.text);
+                                            // controller.itemScrollController?.jumpTo(index: controller.index);
+                                            controller.chatController.clear();
+                                            // controller.scrollToBottom();
+                                            controller.queryResult();
+                                            print("errr${user?.email}");
+                                            // controller.itemScrollController?.jumpTo(index: controller.index);
+                                          } catch (e, stackTrace) {
+                                            print("error $e,$stackTrace");
+                                          }
+                                        },
+                                        icon: const Icon(
+                                          Icons.send_rounded,
+                                          color: Color(0xffFF50FB),
+                                          size: 25,
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                ],
                               )
                             : const CircularProgressIndicator(),
                       ),
                     ),
                   ),
-                  Positioned(
-                    bottom: 100,
-                    left: 290,
-                    right: 20,
-                    child: Container(
-                      height: 50,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: Colors.white),
-                      child: IconButton(
-                          onPressed: () {
-                            if (controller.index > 0) {
-                              controller.itemScrollController
-                                  .jumpTo(index: controller.index - 1);
-                              controller.itemScrollController.scrollTo(
-                                  index: controller.index - 1,
-                                  duration: Duration(milliseconds: 100));
-                              print("index:${controller.index}");
-                            }
-                          },
-                          icon: Icon(
-                            Icons.arrow_downward_outlined,
-                            color: Color(0xffFF50FB),
-                          )),
-                    ),
-                  ),
                 ],
-              ),
-            ),
-            const Padding(
-              padding: EdgeInsets.only(left: 18, top: 10),
-              child: Text(
-                "Ai Buddy may be inaccurate info, including about people, so double-check its response.",
-                style: TextStyle(color: Colors.white, fontSize: 12),
               ),
             ),
             const Row(

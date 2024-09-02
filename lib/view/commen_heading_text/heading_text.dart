@@ -1,7 +1,5 @@
-import 'package:ai_chatboat/controller/heading_text_controller.dart';
-import 'package:ai_chatboat/model/theme/gradiant_text.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import '../../model/export_libreary.dart';
+
 
 class EnterenceText extends StatelessWidget {
   static final HeadingTextController controller =
