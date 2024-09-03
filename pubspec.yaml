@@ -39,12 +39,9 @@ dependencies:
 
   firebase_auth: ^5.2.0
   firebase_core: ^3.4.0
-  scrollable_positioned_list: ^0.3.8
   http: ^1.2.2
   google_sign_in: ^6.2.1
   cloud_firestore: ^5.3.0
-
-  url_launcher: ^6.3.0
   share_plus: ^10.0.0
 
 

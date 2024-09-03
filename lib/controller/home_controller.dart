@@ -110,13 +110,7 @@ class HomeController extends GetxController {
   }
 
   // controllers for manage the scrolling of lift while the qna list is not empty
-  final ItemScrollController? itemScrollController = ItemScrollController();
-  final ScrollOffsetController scrollOffsetController =
-      ScrollOffsetController();
-  final ItemPositionsListener itemPositionsListener =
-      ItemPositionsListener.create();
-  final ScrollOffsetListener scrollOffsetListener =
-      ScrollOffsetListener.create();
+ 
 
   RxBool isEmpty = true.obs;
 

@@ -9,7 +9,6 @@ export 'package:ai_chatboat/model/theme/gradiant_text.dart';
 export 'package:ai_chatboat/view/auth/signin.dart';
 export 'package:cloud_firestore/cloud_firestore.dart';
 export 'package:ai_chatboat/model/singleton_class/add_userModel.dart';
-export 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 export 'package:ai_chatboat/model/util.dart';
 export 'package:ai_chatboat/controller/home_controller.dart';
 export 'package:ai_chatboat/view/commen_heading_text/heading_text.dart';

@@ -395,36 +395,35 @@ class Homepage extends StatelessWidget {
                     bottom: 100,
                     left: 290,
                     right: 20,
-                    child: controller.data.isNotEmpty
-                        ? Container(
-                            height: 50,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: Colors.white),
-                            child: IconButton(
-                                onPressed: () {
-                                  // if (controller.index > 0 &&
-                                  //     controller.itemScrollController != null) {
-                                  //   controller.itemScrollController
-                                  //       ?.jumpTo(index: controller.index);
-                                  //   controller.itemScrollController?.scrollTo(
-                                  //       index: controller.index,
-                                  //       duration: const Duration(milliseconds: 100),
-                                  //       curve: Curves.bounceInOut);
+                    child:  Container(
+                      height: 50,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.white),
+                      child: IconButton(
+                          onPressed: () {
+                            // if (controller.index > 0 &&
+                            //     controller.itemScrollController != null) {
+                            //   controller.itemScrollController
+                            //       ?.jumpTo(index: controller.index);
+                            //   controller.itemScrollController?.scrollTo(
+                            //       index: controller.index,
+                            //       duration: const Duration(milliseconds: 100),
+                            //       curve: Curves.bounceInOut);
 
-                                  controller.scrollToBottom();
-                                  // controller.scrollListener();
-                                  print("index:${controller.index}");
-                                  // }
-                                },
-                                icon: const Icon(
-                                  Icons.arrow_downward_outlined,
-                                  color: Color(0xffFF50FB),
-                                )),
-                          )
-                        : const SizedBox.shrink(),
+                            controller.scrollToBottom();
+                            // controller.scrollListener();
+                            print("index:${controller.index}");
+                            // }
+                          },
+                          icon: const Icon(
+                            Icons.arrow_downward_outlined,
+                            color: Color(0xffFF50FB),
+                          )),
+                    )
+                    ,
                   ),
-                  // : SizedBox.shrink(),
+
 
                   Positioned(
                     bottom: 0,
